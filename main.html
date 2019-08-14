@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script>
+    var audio = new Audio('./resources/ringtone.mp3');
+    audio.play();
+    
+    const shell = require('electron').shell;
+    const remote = require('electron').remote;
+
+    function closeWindow(){
+        console.log("CLOSED")
+        var window = remote.getCurrentWindow();
+        window.close();
+    }
+
+    function redirect(url){
+        shell.openExternal(url);
+    }
+    </script>
+</head>
+<body>
+<div id = "main">
+    <table id = "content">
+        <tr id = "calltype"><th colspan="3">Incoming Call</th></tr>
+        <tr>
+            <td id = "pfp">
+                <img src="./resources/pfp.jpg">
+            </td>
+            <td id = "info" colspan="2">
+                <p> <b>Arizona Bachus</b> <br> +31 6 2781 8132</p>
+            </td>
+        </tr>
+        <tr id =  "buttons">
+            <td><button style = "background-color: #f6443c;" onclick="closeWindow()">Decline</button></td>
+            <td style = "padding:0;"><button style = "background-color: #3cacfa;" onclick="redirect('https://weu-it.4me-staging.com/sd?telephone=31204044142'); closeWindow()">Answer in 4me</button></td>
+            <td><button style = "background-color: #3ab105;" onclick="closeWindow()">Answer</button></td>
+
+        </tr>
+    </table>
+</div>
+</body>
+</html>
