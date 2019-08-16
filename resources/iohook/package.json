@@ -1,0 +1,99 @@
+{
+  "name": "iohook",
+  "version": "0.6.1",
+  "description": "Node.js global keyboard and mouse hook",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "install": "node install.js",
+    "install-all": "node install.js --all",
+    "build": "cmake-js compile",
+    "deploy": "node build.js",
+    "test": "jest",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wilix-team/iohook.git"
+  },
+  "keywords": [
+    "hook",
+    "electron",
+    "nw.js",
+    "listener",
+    "mousemove",
+    "keypress",
+    "keyup",
+    "global keypress",
+    "shortcut"
+  ],
+  "author": "Aloyan Dmitry",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wilix-team/iohook/issues"
+  },
+  "homepage": "https://github.com/wilix-team/iohook#readme",
+  "dependencies": {
+    "@types/node": "^7.0.62",
+    "bindings": "^1.3.0",
+    "node-abi": "^2.4.0",
+    "nugget": "^2.0.1",
+    "pump": "^1.0.3",
+    "rc": "^1.2.8",
+    "tar-fs": "^1.16.2"
+  },
+  "devDependencies": {
+    "archiver": "^2.1.1",
+    "cmake-js": "github:crtxgg/cmake-js#anoa/delay_generator",
+    "jest": "^22.4.3",
+    "minimist": "^1.2.0",
+    "mkdirp": "^0.5.1",
+    "nan": "^2.13.2",
+    "prebuild": "^6.2.2",
+    "robotjs": "^0.5.1",
+    "vuepress": "^0.14.4"
+  },
+  "supportedTargets": [
+    [
+      "electron",
+      "4.0.4",
+      "69"
+    ],
+    [
+      "electron",
+      "5.0.0",
+      "70"
+    ],
+    [
+      "electron",
+      "6.0.0",
+      "73"
+    ],
+    [
+      "node",
+      "8.9.3",
+      "57"
+    ],
+    [
+      "node",
+      "9.2.0",
+      "59"
+    ],
+    [
+      "node",
+      "10.0.0",
+      "64"
+    ],
+    [
+      "node",
+      "11.4.0",
+      "67"
+    ],
+    [
+      "node",
+      "12.0.0",
+      "72"
+    ]
+  ]
+}

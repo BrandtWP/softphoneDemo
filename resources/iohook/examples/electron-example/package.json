@@ -1,0 +1,22 @@
+{
+  "name": "iohook-electron-example",
+  "version": "1.0.0",
+  "description": "Show how to use this module with electron",
+  "main": "main.js",
+  "scripts": {
+    "postinstall": "electron-rebuild",
+    "start": "electron ./",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Aloyan Dmitry",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^6.0.2",
+    "electron-rebuild": "^1.4.0",
+    "node-abi": "^2.11.0"
+  },
+  "cmake-js": {
+    "runtime": "electron",
+    "runtimeVersion": "6.0.2"
+  }
+}
