@@ -17,8 +17,8 @@ const F7 = 65;
 const onAppReady = function () {
   
   let parent = new BrowserWindow({
-    width: 510,
-    height: 310,
+    width: 502,
+    height: 300,
     transparent: true,
     resizable:false,
     frame: false,

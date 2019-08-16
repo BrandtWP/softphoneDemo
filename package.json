@@ -1,17 +1,17 @@
 {
-  "name": "iohook-electron-example",
-  "version": "1.0.0",
-  "description": "Show how to use this module with electron",
+  "name": "4me-CTI-Simulation",
+  "version": "0.0.1",
+  "description": "Simulate 4me Computer Telephone Integration",
   "main": "main.js",
   "scripts": {
     "postinstall": "node resources/iohook/install.js",
     "start": "electron ./",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "electron-builder"
   },
   "author": "Aloyan Dmitry",
   "license": "MIT",
   "dependencies": {
-    "electron-rebuild": "^1.4.0",
     "node-abi": "^2.11.0"
   },
   "cmake-js": {
@@ -19,6 +19,7 @@
     "runtimeVersion": "6.0.2"
   },
   "devDependencies": {
-    "electron": "^6.0.2"
+    "electron": "^6.0.2",
+    "electron-builder": "^21.2.0"
   }
 }

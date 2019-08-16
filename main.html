@@ -11,13 +11,13 @@
     const remote = require('electron').remote;
 
     function closeWindow(){
-        console.log("CLOSED")
         var window = remote.getCurrentWindow();
         window.close();
     }
 
     function redirect(url){
-        shell.openExternal(url);
+        shell.openExternalSync(url);
+	closeWindow();
     }
     </script>
 </head>
@@ -35,7 +35,7 @@
         </tr>
         <tr id =  "buttons">
             <td><button style = "background-color: #f6443c;" onclick="closeWindow()">Decline</button></td>
-            <td style = "padding:0;"><button style = "background-color: #3cacfa;" onclick="redirect('https://weu-it.4me-staging.com/sd?telephone=31204044142'); closeWindow()">Answer in 4me</button></td>
+            <td style = "padding:0;"><button style = "background-color: #3cacfa;" onclick="redirect('https://weu-it.4me-staging.com/sd?telephone=31204044142');">Answer in 4me</button></td>
             <td><button style = "background-color: #3ab105;" onclick="closeWindow()">Answer</button></td>
 
         </tr>

@@ -9,6 +9,8 @@ body {
     color: #545454;
     font-size: 20px;
     overflow: hidden;
+    margin: 0px;
+    padding: 0px;
 }
 
 table, th, td {
