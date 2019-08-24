@@ -12,6 +12,7 @@
   "author": "Aloyan Dmitry",
   "license": "MIT",
   "dependencies": {
+    "mousetrap": "^1.6.3",
     "node-abi": "^2.11.0"
   },
   "cmake-js": {

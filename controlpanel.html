@@ -1,0 +1,112 @@
+<!DOCTYPE HTMl>
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script src="./resources/mousetrap/mousetrap.js"></script>
+        <script src="/home/bwp/softphoneDemo/resources/mousetrap/plugins/record/mousetrap-record.js"></script>
+        <script src="./resources/jquery.js"></script>
+
+    </head>
+    <body>
+        <table id = "config">
+            <tr>
+                <td> Select Redirect URL for when demo user Answers in 4me:</td>
+                <td><input name = "url" placeholder = "Redirect URL" ></td>
+            </tr>
+            <tr>
+                <td>Select file for demo user profile picture:</td>
+                <td><div class = "container"><button name = "pfp">Select File</button><img src = "./resources/pfp.jpg"></div></td>
+            </tr>
+            <tr>
+                <td>Select file for ringtone:</td>
+                <td><div class = "container"><button name = "ringtone">Select File</button> <audio controls><source src = "./resources/ringtone.mp3"></audio></div></td>
+            </tr>
+            <tr>
+                <td>Select demo user name:</td>
+                <td><input name = "name" placeholder = "name"></td>
+            </tr>
+            <tr>
+                <td>Select demo user phone number:</td>
+                <td><input name = "phone" placeholder = "phone number"></td>
+            </tr>
+            <tr>
+                <td>Select shortcut for activating demo:</td>
+                <td><input name = "shortcut" placeholder = "shortcut" onclick = "recordSequence()" readonly></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button onclick = "submit()">Submit</button></td>
+            </tr>
+        </table>
+
+        <script>
+            const ipc = require('electron').ipcRenderer
+            const remote = require('electron').remote;
+
+            var configData;
+
+            var window = remote.getCurrentWindow();
+
+            onload = () => {
+                $.getJSON("./resources/config.json", function(data){
+                    configData = data; 
+                    $.each(configData, function(key, val){
+                        if(key == "pfp"){
+                            $("img").attr("src", val)
+                        } else if (key == "ringtone"){
+                            $("source").attr("src", val)
+                        } else if(key != "keycode") {
+                            document.getElementsByName(key)[0].value = val
+                        }
+                    })
+                })
+            }
+
+            function submit(){
+                
+                $.each(configData, function(key, val){
+                        if(key == "pfp"){
+                            configData["pfp"] = $("img").attr("src")
+                        } else if (key == "ringtone"){
+                            configData["ringtone"] = $("source").attr("src")
+                        } else if(key != "keycode") {
+                            configData[key] = document.getElementsByName(key)[0].value
+                        }
+                    })
+
+                ipc.send('submit', configData)
+
+                window.minimize();
+            }
+
+            function recordSequence() {
+                
+                ipc.send('record');
+    
+                Mousetrap.record(function(sequence, keyCodes) {
+                    document.getElementsByName('shortcut')[0].value = sequence.join(' ')
+                });
+
+            }
+
+            $("td button").on('click', function(){
+
+                // remote.dialog.showOpenDialogSync(window, {
+                //     filters: [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }],
+                //     properties: ['openFile']
+                // })
+
+
+                remote.dialog.showOpenDialogSync(remote.getCurrentWindow(), { 
+                properties: [ 'openFile' ] }, function ( filename ) {
+                    console.log( filename.toString() );
+                }
+                );
+
+
+                console.log('clicked', $(this).attr('name'))
+            })
+        </script>
+    </body>
+</html>
