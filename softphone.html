@@ -3,20 +3,30 @@
 <head>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="./resources/jquery.js"></script>
     <script>
-    var audio = new Audio('./resources/ringtone.mp3');
-    audio.play();
+
+    const ipc = require('electron').ipcRenderer
+    var data;
+
     
     const shell = require('electron').shell;
     const remote = require('electron').remote;
+    
+    ipc.on('config', (event, config) => {
+        data = config.data
+        $("#info p").text("<b>" + data.name + "<b> <br> " + data.phone)
+        $("img").attr("src", data.pfp)
+        new Audio(data.ringtone).play();
+    })
 
     function closeWindow(){
         var window = remote.getCurrentWindow();
         window.close();
     }
 
-    function redirect(url){
-        shell.openExternalSync(url);
+    function redirect(){
+        shell.openExternalSync(data.url);
 	closeWindow();
     }
     </script>
@@ -35,7 +45,7 @@
         </tr>
         <tr id =  "buttons">
             <td><button style = "background-color: #f6443c;" onclick="closeWindow()">Decline</button></td>
-            <td style = "padding:0;"><button style = "background-color: #3cacfa;" onclick="redirect('https://weu-it.4me-staging.com/sd?telephone=31204044142');">Answer in 4me</button></td>
+            <td style = "padding:0;"><button style = "background-color: #3cacfa;" onclick="redirect();">Answer in 4me</button></td>
             <td><button style = "background-color: #3ab105;" onclick="closeWindow()">Answer</button></td>
 
         </tr>

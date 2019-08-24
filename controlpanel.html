@@ -78,7 +78,7 @@
 
                 ipc.send('submit', configData)
 
-                window.minimize();
+                remote.BrowserWindow.getFocusedWindow().minimize();
             }
 
             function recordSequence() {
@@ -105,7 +105,7 @@
                     destination = $("source")
                 }
                 console.log("HEY1")
-                var filename = remote.dialog.showOpenDialogSync(window, {properties: [ 'openFile' ], filters: [filter]})[0]
+                var filename = remote.dialog.showOpenDialogSync({properties: [ 'openFile' ], filters: [filter]})[0]
                 console.log("HEY2")
                 console.log(destination, filename)
                 destination.attr("src", filename)
