@@ -9,6 +9,7 @@
 
     </head>
     <body>
+
         <table id = "config">
             <tr>
                 <td> Select Redirect URL for when demo user Answers in 4me:</td>
@@ -90,24 +91,24 @@
 
             }
 
-            $(".file").on('click', function(){
+            $(".container button").on('click', function(){
 
-		var name = $(this).attr("name")
-		var filter;
-		var destination;
+                var name = $(this).attr("name")
+                var filter;
+                var destination;
 
-		if(name == "pfp"){
-			filter = { name: 'Images', extensions: ['jpg', 'png', 'gif'] }
-			destination = $("img")
-		} else {
-			filter = {name: "Audio", extensions: ['ogg', 'mp3']}
-			destination = $("source")
-		}
-
-                var filename = remote.dialog.showOpenDialogSync(remote.getCurrentWindow(), {properties: [ 'openFile' ], filters: [filter]})[0]
-		console.log("HEY")
-		console.log(destination, filename)
-		destination.attr("src", filename)
+                if(name == "pfp"){
+                    filter = { name: 'Images', extensions: ['jpg', 'png', 'gif'] }
+                    destination = $("img")
+                } else {
+                    filter = {name: "Audio", extensions: ['ogg', 'mp3']}
+                    destination = $("source")
+                }
+                console.log("HEY1")
+                var filename = remote.dialog.showOpenDialogSync(window, {properties: [ 'openFile' ], filters: [filter]})[0]
+                console.log("HEY2")
+                console.log(destination, filename)
+                destination.attr("src", filename)
 
 
                 console.log('clicked', $(this).attr('name'))
