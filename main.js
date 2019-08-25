@@ -19,16 +19,21 @@ const openSoftphone = function (data) {
     width: 502,
     height: 300,
     transparent: true,
-    resizable:false,
+    resizable:true,
     frame: false,
     webPreferences: {
       nodeIntegration: true
-    }
+    },
+    show: false
   });
   
   softphone.loadURL(softphoneHTML);
 
-  softphone.webContents.send('config', {config: data})
+  softphone.once('ready-to-show', () => {
+    softphone.show()
+    softphone.webContents.send('config', data)
+  })
+
   
   softphone.once('close', () => {
     softphone = null;
@@ -51,8 +56,8 @@ const openConfig = function(){
 
   config.once('close', () => {
     config = null;
-    // ioHook.stop();
-    // ioHook.unload()
+    ioHook.stop();
+    ioHook.unload()
   });
   
   
@@ -100,9 +105,10 @@ ipc.on('submit', (event, data) => {
   
   ioHook.start()
   
-  ioHook.registerShortcut(keys, (keys) => {
+  ioHook.registerShortcut(keys, function(){
     ioHook.unregisterAllShortcuts();
-    setTimeout(openSoftphone(data), 500)
+    openSoftphone(data)
+    // setTimeout(openSoftphone(data), 500)
   });
   
 })

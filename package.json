@@ -9,8 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "electron-builder"
   },
-  "author": "Aloyan Dmitry",
-  "license": "MIT",
+  "author": "Brandt Winkler Prins",
   "dependencies": {
     "mousetrap": "^1.6.3",
     "node-abi": "^2.11.0"
