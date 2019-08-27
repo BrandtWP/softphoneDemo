@@ -49,19 +49,20 @@
 
             var window = remote.getCurrentWindow();
 
-            onload = () => {
-                $.getJSON("./resources/config.json", function(data){
-                    configData = data; 
-                    $.each(configData, function(key, val){
-                        if(key == "pfp"){
-                            $("img").attr("src", val)
-                        } else if (key == "ringtone"){
-                            $("source").attr("src", val)
-                        } else if(key != "keycode") {
-                            document.getElementsByName(key)[0].value = val
-                        }
-                    })
+            ipc.on('userData', (event, data) => {
+                console.log(data)
+                configData = data; 
+                $.each(configData, function(key, val){
+                    if(key == "pfp"){
+                        $("img").attr("src", val)
+                    } else if (key == "ringtone"){
+                        $("source").attr("src", val)
+                    } else if(key != "keycode") {
+                        document.getElementsByName(key)[0].value = val
+                    }
                 })
+            })
+            onload = () => {
             }
 
             function submit(){

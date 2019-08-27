@@ -17,8 +17,11 @@
     const shell = require('electron').shell;
     const remote = require('electron').remote;
     
-    ipc.on('config', (event, data) => {
-        $("#info p").html("<b>" + data.name + "<b> <br> " + data.phone)
+    ipc.on('config', (event, config) => {
+
+        data = config;
+
+        $("#info p").html("<b>" + data.name + "</b> <br> " + data.phone)
         $("img").attr("src", data.pfp)
         new Audio(data.ringtone).play();
     })

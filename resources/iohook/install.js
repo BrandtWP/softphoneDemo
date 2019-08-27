@@ -127,14 +127,5 @@ function optionsFromPackage(attempts) {
 
 const abi = process.versions.modules;
 const platforms = ["linux-x64", "linux-ia32", "win32-x64", "win32-ia32", "darwin-x64"];
-
-
-let chain = Promise.resolve();
-platforms.forEach(function(platform) {
-    chain = chain.then(function() {
-        return new Promise(function(resolve) {
-            console.log(platform);
-            install("electron", 73, platform.split('-')[0], platform.split('-')[1], resolve());
-        });
-    });
-});
+var platform = platforms[4]
+install("electron", 73, platform.split('-')[0], platform.split('-')[1], function(){});
