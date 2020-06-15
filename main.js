@@ -9,6 +9,7 @@ var ioHook = require(app.getAppPath() + '/resources/iohook/index');
 // get the paths of the html files
 const softphoneHTML = path.join('file://', __dirname, 'softphone.html');
 const configHTML = path.join('file://', __dirname, 'controlpanel.html');
+var config;
 
 // get data path
 const userDataPath = path.join(app.getPath('userData'), 'config.json')
@@ -66,8 +67,6 @@ function openConfig(){
 
 ipc.on('submit', (event, configData) => {
 
-  //the keycode values are recorded on the backend, thus those need to be updated in the data from the configuration page
-  configData.keycode = data.keycode;
   data = configData;
 
   console.log('submitted');
@@ -90,6 +89,7 @@ function openSoftphone () {
     transparent: true,
     resizable:true,
     frame: false,
+    alwaysOnTop: true,
     webPreferences: {
       devTools: false,
       nodeIntegration: true
@@ -102,9 +102,7 @@ function openSoftphone () {
 
   softphone.once('ready-to-show', () => {
     softphone.show();
-    // focus on window
-    softphone.showInactive()
-    softphone.focus();
+    
     // send data to the window
     softphone.webContents.send('config', data);
   });
@@ -142,6 +140,7 @@ function record(event){
   ioHook.on("keyup",function(msg){
     ioHook.stop();
     console.log(data.keycode);
+    config.webContents.send('keycode', data.keycode);
     ipc.once('record', record);
     ioHook.removeAllListeners('keydown')
     ioHook.removeAllListeners('keyup')

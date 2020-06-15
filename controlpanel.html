@@ -59,6 +59,10 @@
                 updateValues(configData);
             });
 
+            ipc.on('keycode', (event, keycode) => {
+              configData.keycode = keycode;
+            });
+
             function submit(){
 
                 $.each(configData, function(key, val){
@@ -118,6 +122,8 @@
                       document.getElementsByName(key)[0].value = val
                   }
               })
+
+              configData = data;
             }
 
             function restoreDefaults(){

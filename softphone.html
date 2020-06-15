@@ -24,6 +24,7 @@
         $("#info p").html("<b>" + data.name + "</b> <br> " + data.phone)
         $("img").attr("src", data.pfp)
         new Audio(data.ringtone).play();
+
     })
 
     function closeWindow(){
@@ -33,7 +34,7 @@
 
     function redirect(){
         shell.openExternalSync(data.url);
-	closeWindow();
+	       closeWindow();
     }
     </script>
 </head>
