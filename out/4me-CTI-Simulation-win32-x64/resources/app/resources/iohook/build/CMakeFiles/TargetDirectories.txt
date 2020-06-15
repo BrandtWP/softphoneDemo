@@ -1,5 +1,0 @@
-/home/bwp/softphone/test/iohook/build/CMakeFiles/edit_cache.dir
-/home/bwp/softphone/test/iohook/build/CMakeFiles/rebuild_cache.dir
-/home/bwp/softphone/test/iohook/build/CMakeFiles/iohook.dir
-/home/bwp/softphone/test/iohook/build/CMakeFiles/prepare_iuhook.dir
-/home/bwp/softphone/test/iohook/build/CMakeFiles/uiohook.dir

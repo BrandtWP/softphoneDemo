@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC -O3 -DNDEBUG  -shared -Wl,-soname,iohook.node -o Release/iohook.node CMakeFiles/iohook.dir/src/iohook.cc.o libuiohook.a libuiohook.a -lxkbfile -lxkbcommon-x11 -lxkbcommon -lX11-xcb -lxcb -lXinerama -lXt -lXtst -lX11 
