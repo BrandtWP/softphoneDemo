@@ -102,6 +102,8 @@
                 var filename = remote.dialog.showOpenDialogSync({properties: [ 'openFile' ], filters: [filter]})[0]
                 destination.attr("src", filename)
 
+                $('#audio')[0].load()
+
                 console.log('clicked', $(this).attr('name'))
             })
 
