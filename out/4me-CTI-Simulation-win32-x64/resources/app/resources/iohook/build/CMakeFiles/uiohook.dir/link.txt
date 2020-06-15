@@ -1,0 +1,2 @@
+/usr/bin/ar qc libuiohook.a  CMakeFiles/uiohook.dir/libuiohook/src/logger.c.o CMakeFiles/uiohook.dir/libuiohook/src/x11/input_helper.c.o CMakeFiles/uiohook.dir/libuiohook/src/x11/input_hook.c.o CMakeFiles/uiohook.dir/libuiohook/src/x11/post_event.c.o CMakeFiles/uiohook.dir/libuiohook/src/x11/system_properties.c.o
+/usr/bin/ranlib libuiohook.a

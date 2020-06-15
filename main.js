@@ -1,140 +1,141 @@
 
-let app, config, softphone
-let {BrowserWindow} = require('electron')
-app = require('electron').app
-let ipc = require('electron').ipcMain
-const path = require('path');
-const ioHook = require(app.getAppPath() + '/resources/iohook/index');
-fs = require('fs')
+var fs = require('fs');
+var app = require('electron').app;
+var ipc = require('electron').ipcMain;
+var BrowserWindow = require('electron').BrowserWindow;
+var path = require('path');
+var ioHook = require(app.getAppPath() + '/resources/iohook/index');
 
+// get the paths of the html files
 const softphoneHTML = path.join('file://', __dirname, 'softphone.html');
 const configHTML = path.join('file://', __dirname, 'controlpanel.html');
-const CHILD_PADDING = 50;
 
-const defaults = {"keycode":[29,23],"name":"Arizona Bachus","pfp":"./resources/pfp.jpg","phone":"+31 6 2781 8132","ringtone":"./resources/ringtone.mp3","shortcut":"ctrl+i","url":"https://weu-it.4me-staging.com/sd?telephone=31204044142"};
-const userDataPath = path.join(app.getPath('userData'), 'config.json')
+// find where data is stored
+const userDataPath = path.join(app.getPath('userData'), 'config.json');
 
-console.log(userDataPath)
+// Either retrieve existing data or use default values
+var data = JSON.parse(fs.readFileSync(userDataPath)) || JSON.parse(fs.readFileSync('./resources/defaults.json'))
 
-const debug = require('electron-debug');
+// const debug = require('electron-debug');
 
-debug();
-  
-function writeUserData(data) {
-  fs.writeFileSync(userDataPath, JSON.stringify(data));
-}
+// debug();
 
-function readUserData(callback) {
-  try {
-    return JSON.parse(fs.readFileSync(userDataPath))
-  } catch(error) {
-    return defaults
-  }
-}
+app.on('ready', function(){
+  openConfig();
+});
 
-var keys = [29,23]
+function openConfig(){
 
-ioHook.start();
-
-const openSoftphone = function (data) {
-  
-  softphone = new BrowserWindow({
-    width: 502,
-    height: 300,
-    transparent: true,
-    resizable:true,
-    frame: false,
-    webPreferences: {
-      nodeIntegration: true
-    },
-    show: false
-  });
-  
-  softphone.loadURL(softphoneHTML);
-
-  softphone.once('ready-to-show', () => {
-    softphone.show()
-    softphone.webContents.send('config', data)
-  })
-
-  
-  softphone.once('close', () => {
-    softphone = null;
-    ioHook.stop();
-    ioHook.unload()
-    
-  });
-};
-
-const openConfig = function(){
+  // create window
   config = new BrowserWindow({
     width: 800,
     height: 500,
     webPreferences: {
+      // devTools: false,
       nodeIntegration: true
     },
     show:false,
-  })
+  });
 
+  // load HTML
   config.loadURL(configHTML);
+
   config.once('ready-to-show', () => {
-    config.show()
-    config.webContents.send('userData', readUserData())
+    config.show();
+    // send data to window
+    config.webContents.send('userData', data);
   })
 
   config.once('close', () => {
+    // close the window
     config = null;
+    // stop ioHook
     ioHook.stop();
-    ioHook.unload()
+    ioHook.unload();
   });
-  
-  
-  }
-  
-  
+}
 
-app.on('ready', function(){
-  
-  openConfig()
-  
+ipc.on('submit', (event, configData) => {
+
+  //the keycode values are recorded on the backend, thus those need to be updated in the data from the configuration page
+  configData.keycode = data.keycode;
+  data = configData;
+
+  console.log('submitted');
+  console.log(data);
+
+  // save the data
+  fs.writeFileSync(userDataPath, JSON.stringify(data));
+
+  // start listening for the shortcut
+  restartIoHook();
+
 });
 
+function openSoftphone () {
 
-ipc.on('record', (event) => {
+  // create window
+  softphone = new BrowserWindow({
+    width: 520,
+    height: 320,
+    transparent: true,
+    resizable:true,
+    frame: false,
+    webPreferences: {
+      devTools: false,
+      nodeIntegration: true
+    },
+    show: false
+  });
 
-  console.log("recording")
+  // load HTML
+  softphone.loadURL(softphoneHTML);
 
-  var keyCodes = []
+  softphone.once('ready-to-show', () => {
+    softphone.show();
+    // focus on window
+    softphone.showInactive()
+    softphone.focus();
+    // send data to the window
+    softphone.webContents.send('config', data);
+  });
 
-  ioHook.start()
+  softphone.once('close', () => {
+    // close window
+    softphone = null;
+    // start listening for shortcut again
+    restartIoHook();
+  });
+};
 
+function restartIoHook(){
+  ioHook.start();
+  ioHook.registerShortcut(data.keycode, function(){
+    ioHook.unregisterAllShortcuts();
+    ioHook.stop();
+    openSoftphone(data)
+  });
+}
+
+ipc.once('record', record);
+
+function record(event){
+  console.log("recording");
+
+  data.keycode = [];
+
+  ioHook.start();
 
   ioHook.on("keydown",function(msg){
-    keyCodes.push(msg.keycode)
+    data.keycode.push(msg.keycode);
   });
 
   ioHook.on("keyup",function(msg){
-    keys = keyCodes;
-    config.webContents.send('keyCodes', {codes: keyCodes})
-    keyCodes = []
-    ioHook.stop()
+    ioHook.stop();
+    console.log(data.keycode);
+    ipc.once('record', record);
+    ioHook.removeAllListeners('keydown')
+    ioHook.removeAllListeners('keyup')
   });
-});
 
-ipc.on('submit', (event, data) => {
-
-
-  console.log('submitted')
-  console.log(data)
-  data.keycode = keys;
-
-  writeUserData(data)
-  
-  ioHook.start()
-  
-  ioHook.registerShortcut(keys, function(){
-    ioHook.unregisterAllShortcuts();
-    openSoftphone(data)
-  });
-  
-});
+}

@@ -17,11 +17,11 @@
             </tr>
             <tr>
                 <td>Select file for demo user profile picture:</td>
-                <td><div class = "container"><button name = "pfp">Select File</button><img src = "./resources/pfp.jpg"></div></td>
+                <td><div class = "container"><button name = "pfp">Select File</button><img src = ""></div></td>
             </tr>
             <tr>
                 <td>Select file for ringtone:</td>
-                <td><div class = "container"><button name = "ringtone">Select File</button> <audio controls><source src = "./resources/ringtone.mp3"></audio></div></td>
+                <td><div class = "container"><button name = "ringtone">Select File</button> <audio id = 'audio' controls="controls"><source src = ""></audio></div></td>
             </tr>
             <tr>
                 <td>Select demo user name:</td>
@@ -34,6 +34,10 @@
             <tr>
                 <td>Select shortcut for activating demo:</td>
                 <td><input name = "shortcut" placeholder = "shortcut" onclick = "recordSequence()" readonly></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button onclick = "restoreDefaults()">Reset</button></td>
             </tr>
             <tr>
                 <td></td>
@@ -50,23 +54,13 @@
             var window = remote.getCurrentWindow();
 
             ipc.on('userData', (event, data) => {
-                console.log(data)
-                configData = data; 
-                $.each(configData, function(key, val){
-                    if(key == "pfp"){
-                        $("img").attr("src", val)
-                    } else if (key == "ringtone"){
-                        $("source").attr("src", val)
-                    } else if(key != "keycode") {
-                        document.getElementsByName(key)[0].value = val
-                    }
-                })
-            })
-            onload = () => {
-            }
+
+                configData = data;
+                updateValues(configData);
+            });
 
             function submit(){
-                
+
                 $.each(configData, function(key, val){
                         if(key == "pfp"){
                             configData["pfp"] = $("img").attr("src")
@@ -83,9 +77,9 @@
             }
 
             function recordSequence() {
-                
+
                 ipc.send('record');
-    
+
                 Mousetrap.record(function(sequence) {
                     document.getElementsByName('shortcut')[0].value = sequence.join(' ')
                 });
@@ -105,15 +99,28 @@
                     filter = {name: "Audio", extensions: ['ogg', 'mp3']}
                     destination = $("source")
                 }
-                console.log("HEY1")
-                var filename = encodeURI(remote.dialog.showOpenDialogSync({properties: [ 'openFile' ], filters: [filter]})[0])
-                console.log("HEY2")
-                console.log(destination, filename)
+                var filename = remote.dialog.showOpenDialogSync({properties: [ 'openFile' ], filters: [filter]})[0]
                 destination.attr("src", filename)
-
 
                 console.log('clicked', $(this).attr('name'))
             })
+
+            function updateValues(data){
+              $.each(data, function(key, val){
+                  if(key == "pfp"){
+                      $("img").attr("src", val)
+                  } else if (key == "ringtone"){
+                      $("source")[0].src = val;
+                      $('#audio')[0].load()
+                  } else if(key != "keycode") {
+                      document.getElementsByName(key)[0].value = val
+                  }
+              })
+            }
+
+            function restoreDefaults(){
+              $.getJSON('./resources/defaults.json', updateValues);
+            }
         </script>
     </body>
 </html>

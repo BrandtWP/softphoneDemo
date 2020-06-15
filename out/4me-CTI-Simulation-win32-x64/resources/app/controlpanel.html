@@ -1,0 +1,119 @@
+<!DOCTYPE HTMl>
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script src="./resources/mousetrap.js"></script>
+        <script src="./resources/mousetrap-record.js"></script>
+        <script src="./resources/jquery.js"></script>
+
+    </head>
+    <body>
+
+        <table id = "config">
+            <tr>
+                <td> Select Redirect URL for when demo user Answers in 4me:</td>
+                <td><input name = "url" placeholder = "Redirect URL" ></td>
+            </tr>
+            <tr>
+                <td>Select file for demo user profile picture:</td>
+                <td><div class = "container"><button name = "pfp">Select File</button><img src = "./resources/pfp.jpg"></div></td>
+            </tr>
+            <tr>
+                <td>Select file for ringtone:</td>
+                <td><div class = "container"><button name = "ringtone">Select File</button> <audio controls><source src = "./resources/ringtone.mp3"></audio></div></td>
+            </tr>
+            <tr>
+                <td>Select demo user name:</td>
+                <td><input name = "name" placeholder = "name"></td>
+            </tr>
+            <tr>
+                <td>Select demo user phone number:</td>
+                <td><input name = "phone" placeholder = "phone number"></td>
+            </tr>
+            <tr>
+                <td>Select shortcut for activating demo:</td>
+                <td><input name = "shortcut" placeholder = "shortcut" onclick = "recordSequence()" readonly></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button onclick = "submit()">Submit</button></td>
+            </tr>
+        </table>
+
+        <script>
+            const ipc = require('electron').ipcRenderer
+            const remote = require('electron').remote;
+
+            var configData;
+
+            var window = remote.getCurrentWindow();
+
+            ipc.on('userData', (event, data) => {
+                console.log(data)
+                configData = data; 
+                $.each(configData, function(key, val){
+                    if(key == "pfp"){
+                        $("img").attr("src", val)
+                    } else if (key == "ringtone"){
+                        $("source").attr("src", val)
+                    } else if(key != "keycode") {
+                        document.getElementsByName(key)[0].value = val
+                    }
+                })
+            })
+            onload = () => {
+            }
+
+            function submit(){
+                
+                $.each(configData, function(key, val){
+                        if(key == "pfp"){
+                            configData["pfp"] = $("img").attr("src")
+                        } else if (key == "ringtone"){
+                            configData["ringtone"] = $("source").attr("src")
+                        } else if(key != "keycode") {
+                            configData[key] = document.getElementsByName(key)[0].value
+                        }
+                    })
+
+                ipc.send('submit', configData)
+
+                remote.BrowserWindow.getFocusedWindow().minimize();
+            }
+
+            function recordSequence() {
+                
+                ipc.send('record');
+    
+                Mousetrap.record(function(sequence) {
+                    document.getElementsByName('shortcut')[0].value = sequence.join(' ')
+                });
+
+            }
+
+            $(".container button").on('click', function(){
+
+                var name = $(this).attr("name")
+                var filter;
+                var destination;
+
+                if(name == "pfp"){
+                    filter = { name: 'Images', extensions: ['jpg', 'png', 'gif'] }
+                    destination = $("img")
+                } else {
+                    filter = {name: "Audio", extensions: ['ogg', 'mp3']}
+                    destination = $("source")
+                }
+                console.log("HEY1")
+                var filename = encodeURI(remote.dialog.showOpenDialogSync({properties: [ 'openFile' ], filters: [filter]})[0])
+                console.log("HEY2")
+                console.log(destination, filename)
+                destination.attr("src", filename)
+
+
+                console.log('clicked', $(this).attr('name'))
+            })
+        </script>
+    </body>
+</html>

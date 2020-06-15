@@ -1,0 +1,10 @@
+prefix=/usr/local
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: uiohook
+Description: uiohook library
+Version: 1.1.0
+Libs: -lxkbfile -lxkbcommon-x11 -lxkbcommon -lxkbcommon -lX11-xcb -lX11 -lxcb -lXinerama -lXt -lX11 -lXtst -lXtst -lX11  -L${libdir} -luiohook
+Cflags: -I${includedir}
+Requires:  x11 xtst xt xinerama x11-xcb xkbcommon xkbcommon-x11 xkbfile

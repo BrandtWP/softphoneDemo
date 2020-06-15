@@ -13,10 +13,10 @@
     const ipc = require('electron').ipcRenderer
     var data;
 
-    
+
     const shell = require('electron').shell;
     const remote = require('electron').remote;
-    
+
     ipc.on('config', (event, config) => {
 
         data = config;

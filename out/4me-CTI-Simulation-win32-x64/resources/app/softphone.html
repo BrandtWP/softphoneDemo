@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="./resources/jquery.js"></script>
+
+    <script>if (window.module) module = window.module;</script>
+    <script>
+
+    const ipc = require('electron').ipcRenderer
+    var data;
+
+    
+    const shell = require('electron').shell;
+    const remote = require('electron').remote;
+    
+    ipc.on('config', (event, config) => {
+
+        data = config;
+
+        $("#info p").html("<b>" + data.name + "</b> <br> " + data.phone)
+        $("img").attr("src", data.pfp)
+        new Audio(data.ringtone).play();
+    })
+
+    function closeWindow(){
+        var window = remote.getCurrentWindow();
+        window.close();
+    }
+
+    function redirect(){
+        shell.openExternalSync(data.url);
+	closeWindow();
+    }
+    </script>
+</head>
+<body>
+<div id = "main">
+    <table id = "content">
+        <tr id = "calltype"><th colspan="3">Incoming Call</th></tr>
+        <tr>
+            <td id = "pfp">
+                <img>
+            </td>
+            <td id = "info" colspan="2">
+                <p></p>
+            </td>
+        </tr>
+        <tr id =  "buttons">
+            <td><button style = "background-color: #f6443c;" onclick="closeWindow()">Decline</button></td>
+            <td style = "padding:0;"><button style = "background-color: #3cacfa;" onclick="redirect();">Answer in 4me</button></td>
+            <td><button style = "background-color: #3ab105;" onclick="closeWindow()">Answer</button></td>
+
+        </tr>
+    </table>
+</div>
+</body>
+</html>
