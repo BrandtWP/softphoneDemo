@@ -11,10 +11,10 @@ const softphoneHTML = path.join('file://', __dirname, 'softphone.html');
 const configHTML = path.join('file://', __dirname, 'controlpanel.html');
 
 // find where data is stored
-const userDataPath = path.join(app.getPath('userData'), 'config.json');
+const userDataPath = app.getPath('userData')
 
 // Either retrieve existing data or use default values
-var data = JSON.parse(fs.readFileSync(userDataPath)) || JSON.parse(fs.readFileSync('./resources/defaults.json'))
+var data = JSON.parse(fs.readFileSync(path.join(userDataPath, 'config.json'))) || JSON.parse(fs.readFileSync('./resources/defaults.json'))
 
 // const debug = require('electron-debug');
 
@@ -65,7 +65,7 @@ ipc.on('submit', (event, configData) => {
   console.log(data);
 
   // save the data
-  fs.writeFileSync(userDataPath, JSON.stringify(data));
+  fs.writeFileSync(path.join(userDataPath, 'config.json'), JSON.stringify(data));
 
   // start listening for the shortcut
   restartIoHook();
