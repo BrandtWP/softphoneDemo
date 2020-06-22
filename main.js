@@ -22,7 +22,7 @@ try{
   console.log('hi?')
 }
 
-data = data || JSON.parse(fs.readFileSync('./resources/defaults.json'))
+data = data || JSON.parse(fs.readFileSync(path.join(__dirname, 'resources/defaults.json')))
 
 console.log(data)
 
@@ -33,6 +33,23 @@ console.log(data)
 app.on('ready', function(){
   openConfig();
 });
+
+// Quit when all windows are closed, except on macOS. There, it's common
+// for applications and their menu bar to stay active until the user quits
+// explicitly with Cmd + Q.
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+})
+
+app.on('activate', () => {
+  // On macOS it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (BrowserWindow.getAllWindows().length === 0) {
+    openConfig()
+  }
+})
 
 function openConfig(){
 
@@ -102,7 +119,7 @@ function openSoftphone () {
 
   softphone.once('ready-to-show', () => {
     softphone.show();
-    
+
     // send data to the window
     softphone.webContents.send('config', data);
   });

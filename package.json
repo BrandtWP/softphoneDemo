@@ -1,6 +1,6 @@
 {
-  "name": "4me-CTI-Simulation",
-  "version": "0.0.1",
+  "name": "4me-CTI-Simulator",
+  "version": "1.0.0",
   "description": "Simulate 4me Computer Telephone Integration",
   "main": "main.js",
   "scripts": {
@@ -23,5 +23,9 @@
     "electron": "^6.0.2",
     "electron-builder": "^21.2.0",
     "electron-rebuild": "^1.11.0"
+  },
+  "build": {
+    "copyright": "Copyright © 2020 4me, Inc.",
+    "productName": "4me CTI Simulator"
   }
 }
