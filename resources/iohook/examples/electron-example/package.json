@@ -11,7 +11,7 @@
   "author": "Aloyan Dmitry",
   "license": "MIT",
   "dependencies": {
-    "electron": "^6.0.2",
+    "electron": "^13.6.6",
     "electron-rebuild": "^1.4.0",
     "node-abi": "^2.11.0"
   },
